@@ -2,17 +2,46 @@ package main
 
 import (
 	"flag"
-	"strconv"
+	"log"
 
 	"github.com/locona/github-release-qadoc/pkg/github"
 	"github.com/locona/github-release-qadoc/pkg/markdown"
 )
 
+var (
+	issueNumber  int
+	organization string
+	repo         string
+	ci           bool
+)
+
 func main() {
-	cli := github.New()
+	flag.IntVar(&issueNumber, "issue", 0, "GitHub Issue Number.")
+	flag.StringVar(&organization, "organization", "", "GitHub Organization.")
+	flag.StringVar(&repo, "repo", "", "GitHub Repository.")
+	flag.BoolVar(&ci, "ci", false, "Use CI")
 	flag.Parse()
-	args := flag.Args()
-	issueNumber, err := strconv.Atoi(args[0])
+
+	var opt *github.Option
+	if issueNumber == 0 {
+		log.Fatal("Required Issue Number(--issue)")
+	}
+	if ci {
+		if organization == "" {
+			log.Fatal("Required GitHub Organization(--organization)")
+		}
+
+		if repo == "" {
+			log.Fatal("Required GitHub Repository(--repo)")
+		}
+
+		opt = &github.Option{
+			Organization: organization,
+			Repository:   repo,
+		}
+	}
+
+	cli, err := github.New(opt)
 	if err != nil {
 		panic(err)
 	}

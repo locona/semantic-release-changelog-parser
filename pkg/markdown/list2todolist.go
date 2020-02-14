@@ -69,7 +69,7 @@ func NewStackNode(nodeType blackfriday.NodeType, text string) *StackNode {
 	case blackfriday.Item:
 		res = &StackNode{
 			NodeType: blackfriday.Text,
-			Text:     "- [ ] " + text + "\n",
+			Text:     "- [ ] " + text + "  @ohatakky" + "\n",
 		}
 	case blackfriday.Paragraph:
 		res = &StackNode{
