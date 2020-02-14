@@ -8,17 +8,17 @@ import (
 
 func (cli *Client) LatestRelease() (*github.RepositoryRelease, error) {
 	ctx := context.Background()
-	release, _, err := cli.svc.Repositories.GetLatestRelease(
+	releases, _, err := cli.svc.Repositories.ListReleases(
 		ctx,
 		cli.Config.Organization,
 		cli.Config.Repository,
+		nil,
 	)
-
 	if err != nil {
 		return nil, err
 	}
 
-	return release, nil
+	return releases[0], nil
 }
 
 func (cli *Client) IssueComment(issueNumber int, body string) (*github.IssueComment, error) {
