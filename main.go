@@ -2,80 +2,29 @@ package main
 
 import (
 	"flag"
-	"fmt"
-	"strings"
+	"strconv"
 
-	"github.com/russross/blackfriday"
+	"github.com/locona/github-release-qadoc/pkg/github"
+	"github.com/locona/github-release-qadoc/pkg/markdown"
 )
 
-type StackNode struct {
-	NodeType blackfriday.NodeType
-	Text     string
-}
-
 func main() {
+	cli := github.New()
 	flag.Parse()
 	args := flag.Args()
+	issueNumber, err := strconv.Atoi(args[0])
+	if err != nil {
+		panic(err)
+	}
 
-	md := strings.ReplaceAll(args[0], "\\r", "\n")
-	md = strings.ReplaceAll(md, "\\n", "\n\n")
-	markdown := blackfriday.New()
-	rootNode := markdown.Parse([]byte(md))
+	release, err := cli.LatestRelease()
+	if err != nil {
+		panic(err)
+	}
 
-	stackNodes := make([]*StackNode, 0)
-	res := ""
-	rootNode.Walk(func(node *blackfriday.Node, entering bool) blackfriday.WalkStatus {
-		if entering {
-			stackNodes = append(stackNodes, &StackNode{
-				NodeType: node.Type,
-				Text:     string(node.Literal),
-			})
-		} else {
-			if node.Type == blackfriday.Document {
-				for _, n := range stackNodes {
-					res = res + n.Text
-				}
-				return blackfriday.SkipChildren
-			}
-
-			popDone := true
-			currentType := node.Type
-			text := ""
-			for popDone {
-				popNode, tmp := stackNodes[len(stackNodes)-1], stackNodes[:len(stackNodes)-1]
-				stackNodes = tmp
-				if popNode.NodeType == currentType {
-					switch currentType {
-					case blackfriday.Heading:
-						stackNodes = append(stackNodes, &StackNode{
-							NodeType: blackfriday.Text,
-							Text:     "### " + text + "\n",
-						})
-					case blackfriday.Strong:
-						stackNodes = append(stackNodes, &StackNode{
-							NodeType: blackfriday.Text,
-							Text:     "**" + text + "**",
-						})
-					case blackfriday.Item:
-						stackNodes = append(stackNodes, &StackNode{
-							NodeType: blackfriday.Text,
-							Text:     "- [ ] " + text + "\n",
-						})
-					default:
-						stackNodes = append(stackNodes, &StackNode{
-							NodeType: blackfriday.Text,
-							Text:     text,
-						})
-					}
-					popDone = false
-				}
-
-				text = popNode.Text + text
-			}
-		}
-
-		return blackfriday.GoToNext
-	})
-
-	fmt.Println(res)
+	res := markdown.List2TodoList(*release.Body)
+	_, err = cli.IssueComment(issueNumber, res)
+	if err != nil {
+		panic(err)
+	}
 }
