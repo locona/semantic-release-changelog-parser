@@ -1,3 +1,11 @@
+### [1.0.1](https://github.com/locona/github-release-qadoc/compare/v1.0.0...v1.0.1) (2020-02-14)
+
+
+### Bug Fixes
+
+* Include pre-release. ([2b5468c](https://github.com/locona/github-release-qadoc/commit/2b5468cc2dbde4155f715dc9c62277448e4ac687))
+* Update modules ([29312e5](https://github.com/locona/github-release-qadoc/commit/29312e5c691a2a804fda889e5401dfdec63855ec))
+
 ## 1.0.0 (2020-02-14)
 
 
