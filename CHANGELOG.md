@@ -1,3 +1,10 @@
+### [1.0.2](https://github.com/locona/github-release-qadoc/compare/v1.0.1...v1.0.2) (2020-02-19)
+
+
+### Bug Fixes
+
+* Remove assignment. ([5102548](https://github.com/locona/github-release-qadoc/commit/5102548852626b4f504fa7c13a47adc49fc4daff))
+
 ### [1.0.1](https://github.com/locona/github-release-qadoc/compare/v1.0.0...v1.0.1) (2020-02-14)
 
 
