@@ -9,6 +9,5 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
-	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
-	google.golang.org/protobuf v1.25.0 // indirect
+	golang.org/x/oauth2 v0.0.0-20220909003341-f21342109be1
 )
